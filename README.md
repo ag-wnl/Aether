@@ -23,3 +23,9 @@ them as the compilation target while using cargo build.
 ```bash
   rustup target add thumbv7em-none-eabihf
 ```
+
+to run machine emulator to run our bootloader-kernel setup
+
+```bash
+qemu-system-x86_64 -drive format=raw,file=target/x86_64_aether/debug/bootimage-Aether.bin
+```
