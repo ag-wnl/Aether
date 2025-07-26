@@ -4,6 +4,7 @@
 #![no_main]
 
 use core::panic::PanicInfo;
+mod vga_buffer;
 
 /**
  * @description: our compiled executable target is for: thumbv7em-none-eabihf target triple,
@@ -32,13 +33,22 @@ static HELLO: &[u8] = b"welcome to aether v0.1.0";
 pub extern "C" fn _start() -> ! {
 
     // 0xb8000 - vga buffer address
-    let vga_buffer = 0xb8000 as *mut u8; // raw pointer 
-    for (i, &byte) in HELLO.iter().enumerate() {
-        unsafe {
-            *vga_buffer.offset(i as isize * 2) = byte; // writing string byte
-            *vga_buffer.offset(i as isize * 2 + 1) = 0xb; // adding a cyan color byte
-        }
-    }
+    // let vga_buffer = 0xb8000 as *mut u8; // raw pointer 
+    // for (i, &byte) in HELLO.iter().enumerate() {
+    //     unsafe {
+    //         *vga_buffer.offset(i as isize * 2) = byte; // writing string byte
+    //         *vga_buffer.offset(i as isize * 2 + 1) = 0xb; // adding a cyan color byte
+    //     }
+    // }
+
+    let mut writer = vga_buffer::Writer {
+        col_pos: 0,
+        color_code: vga_buffer::ColorCode::new(vga_buffer::Color::Cyan, vga_buffer::Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut vga_buffer::Buffer) },
+    };
+
+    writer.write_string("hey, i'm @agwnl\ncout << hello world;");
+
 
     loop {}
 }
