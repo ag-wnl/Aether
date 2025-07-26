@@ -31,6 +31,7 @@ static HELLO: &[u8] = b"welcome to aether v0.1.0";
  */
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
+    use core::fmt::Write;
 
     // 0xb8000 - vga buffer address
     // let vga_buffer = 0xb8000 as *mut u8; // raw pointer 
@@ -41,14 +42,19 @@ pub extern "C" fn _start() -> ! {
     //     }
     // }
 
-    let mut writer = vga_buffer::Writer {
-        col_pos: 0,
-        color_code: vga_buffer::ColorCode::new(vga_buffer::Color::Cyan, vga_buffer::Color::Black),
-        buffer: unsafe { &mut *(0xb8000 as *mut vga_buffer::Buffer) },
-    };
+    // let mut writer = vga_buffer::Writer {
+    //     col_pos: 0,
+    //     color_code: vga_buffer::ColorCode::new(vga_buffer::Color::Cyan, vga_buffer::Color::Black),
+    //     buffer: unsafe { &mut *(0xb8000 as *mut vga_buffer::Buffer) },
+    // };
 
-    writer.write_string("hey, i'm @agwnl\ncout << hello world;");
 
+    // writer.write_string("hey, i'm @agwnl\ncout << hello world;");   
+
+
+    // write!(vga_buffer::WRITER.lock(), "some numbers: {} {}", 42, 1.337).unwrap();
+
+    println!("welcome to {}{}", "aether OS", "!");
 
     loop {}
 }
