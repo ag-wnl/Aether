@@ -17,6 +17,18 @@ fn panic(info: &PanicInfo) -> ! {
     loop{}
 } 
 
+
+
+static HELLO: &[u8] = b"                     $$\\     $$\\                           
+                     $$ |    $$ |                          
+ $$$$$$\\   $$$$$$\\ $$$$$$\\   $$$$$$$\\   $$$$$$\\   $$$$$$\\  
+ \\____$$\\ $$  __$$\\\\_$$  _|  $$  __$$\\ $$  __$$\\ $$  __$$\\ 
+ $$$$$$$ |$$$$$$$$ | $$ |    $$ |  $$ |$$$$$$$$ |$$ |  \\__|
+$$  __$$ |$$   ____| $$ |$$\\ $$ |  $$ |$$   ____|$$ |      
+\\$$$$$$$ |\\$$$$$$$\\  \\$$$$  |$$ |  $$ |\\$$$$$$$\\ $$ |      
+ \\_______| \\_______|  \\____/ \\__|  \\__| \\_______|\\__| 
+";
+
 /**
  * we are using extern "C" to use C programming caller convention
  * as OS/system linker expect such syntax as they are written in C
@@ -26,5 +38,15 @@ fn panic(info: &PanicInfo) -> ! {
  */
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-    loop{}
+
+    // 0xb8000 - vga buffer address
+    let vga_buffer = 0xb8000 as *mut u8; // raw pointer 
+    for (i, &byte) in HELLO.iter().enumerate() {
+        unsafe {
+            *vga_buffer.offset(i as isize * 2) = byte; // writing string byte
+            *vga_buffer.offset(i as isize * 2 + 1) = 0xb; // adding a cyan color byte
+        }
+    }
+
+    loop {}
 }
