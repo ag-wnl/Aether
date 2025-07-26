@@ -1,0 +1,13 @@
+[package]
+name = "Aether"
+version = "0.1.0"
+edition = "2024"
+authors = ["Agnideep Ghosh <agnideep22@gmail.com>"]
+
+[profile.dev]
+panic = "abort" # disable stack unwinding on panic
+
+[profile.release]
+panic = "abort" 
+
+[dependencies]
