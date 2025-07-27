@@ -2,9 +2,11 @@
 
 #![no_std]
 #![no_main]
+#![feature(abi_x86_interrupt)]
 
 use core::panic::PanicInfo;
 mod vga_buffer;
+mod interrupts;
 
 /**
  * @description: our compiled executable target is for: thumbv7em-none-eabihf target triple,
@@ -55,6 +57,12 @@ pub extern "C" fn _start() -> ! {
     // write!(vga_buffer::WRITER.lock(), "some numbers: {} {}", 42, 1.337).unwrap();
 
     println!("welcome to {}{}", "aether OS", "!");
+
+
+    interrupts::initialize_idt();
+    x86_64::instructions::interrupts::int3();
+
+    print!("did not crash");
 
     loop {}
 }
