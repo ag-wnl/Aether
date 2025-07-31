@@ -60,9 +60,17 @@ pub extern "C" fn _start() -> ! {
 
 
     interrupts::initialize_idt();
-    x86_64::instructions::interrupts::int3();
 
+    // trigger a breakpoint interrupt 
+    x86_64::instructions::interrupts::int3();
     print!("did not crash");
+
+    // trigger a page fault interrupt - double fault trigger, if not handled causes triple fault which halts and restarts cpu:
+    unsafe {
+        *(0xdeadbeef as *mut u8) = 42;
+    };
+    println!("It did not crash!");
+
 
     loop {}
 }
